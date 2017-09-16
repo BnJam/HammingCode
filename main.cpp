@@ -10,6 +10,7 @@
  * error occurs, return detection.
  *
  * main:
+ * See purpose
  * 
  */
 
@@ -17,7 +18,11 @@
 #include <string>
 #include <math.h>
 
-
+/**
+ * [main description]
+ * 
+ * @return [description]
+ */
 int main() {
 	
 	// Store bit string
@@ -125,7 +130,7 @@ int main() {
 		std::cout << "P4 is in error" << std::endl;
 	} else if(c4 == 1 && syndrome == 1) {
 		std::cout << "1 bit is in error.. correcting..." << std::endl << std::endl;
-		std::cout << "The " << error << " bit is in error" << std::endl << std::endl;
+		//std::cout << "The " << error << " bit is in error" << std::endl << std::endl;
 
 		// Print check bit result for user
 		std::cout << "Error at: " << error << std::endl;
@@ -151,5 +156,5 @@ int main() {
 
 	}
 
-
+	return 0;
 }
