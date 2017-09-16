@@ -1,37 +1,48 @@
-## Welcome to GitHub Pages
+# Hamming Code 
+## by
+## BnJam
 
-You can use the [editor on GitHub](https://github.com/BnJam/HammingCode/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Here is a simple implementation for the Hamming Code that takes in an 8 bit string of ones and zeroes
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+	/**
+	 * Program conceptual layout
+	 * 
+	 * | P1 | P2 | D1 | P3 | D2 | D3 | D4 | P4 |
+	 * | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  |
+	 *
+	 * 0 0 0 0 | 0   | 
+	 * 0 0 0 1 | P1  | 1
+	 * 0 0 1 0 | P2  | 2
+	 * 0 0 1 1 | D1  | 3
+	 * 0 1 0 0 | P3  | 4
+	 * 0 1 0 1 | D2  | 5
+	 * 0 1 1 0 | D3  | 6
+	 * 0 1 1 1 | D4  | 7
+	 * 1 0 0 0 | P4  | 8
+	 */
+   
+Where 'P' indicates the parity bits and 'D' indicates the data bits. 
+  ``` 
+   P1 = XOR(3,5,7)
+   P2 = XOR(3,6,7)
+   P3 = XOR(5,6,7)
+   P4 = XOR(1,2,3,4,5,6,7)
 ```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/BnJam/HammingCode/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+These parity bits are used along with themselves to determine the delivered check
+```   
+   C1 = XOR(1,3,5,7)
+   C2 = XOR(2,3,6,7)
+   C3 = XOR(4,5,6,7)
+   C4 = XOR(1,2,3,4,5,6,7,8)
+```   
+Exclusive OR-ing the check bits 1, 2, and 3, you will result in the Syndrome of the delivered string. This is used in 
+comparison with check bit 4 to determine the following:
+```
+  C4 Syndrome
+   0  0         No Error
+   0  !0        2 bits in error
+   1  0         P4 is in error
+   1  !0        1 bit is in error and can be corrected
+```   
+If one bit is in error, then we can correct it by reading the detail of the Syndrome C3 C2 C1 to determine
+the binary representation of the index that requires fixing (flipping to the opposite state). 
