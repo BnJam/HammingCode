@@ -17,6 +17,7 @@
 #include <iostream>
 #include <string>
 #include <math.h>
+#include <assert.h>
 
 /**
  * [main description]
@@ -30,15 +31,14 @@ int main() {
 	int ham[7];
 
 	// Get input from user
-	std::cout << "Enter 7 bit string:" << std::endl;
+	std::cout << "Enter 8 bit string:" << std::endl;
 	std::cin >> input;
 	
 	// Convert user input from string to int array 
 	input = input.c_str();
-	for(int i=0; i<7; i++) {
+	for(int i=0; i<8; i++) {
 		ham[i] = (int)input[i] - '0';
 	}
-
 
 	//std::cout << ham[0] << std::endl; // Debug print statement
 
@@ -72,7 +72,7 @@ int main() {
 		std::cout << "P1 is in error" << std::endl;
 	} else if(p1 == ham[1-1] && p2 != ham[2-1] && p3 != ham[4-1]) {
 		std::cout << "P2 is in error" << std::endl;
-	} else if(p1 == ham[1-1] && p2 == ham[2-1] && p3 == ham[4-1]) {
+	} else if(p1 == ham[1-1] && p2 == ham[2-1] && p3 != ham[4-1]) {
 		std::cout << "P3 is in error" << std::endl;
 	} else if(p1 != ham[1-1] && p2 != ham[2-1]) {
 		std::cout << "d1 is in error" << std::endl; 
@@ -84,20 +84,13 @@ int main() {
 		std::cout << "d4 is in error" << std::endl;
 	}
 
-
 	// Set check bits
 	int c1, c2, c3, c4;
 	c1 = (ham[1-1] ^ ham[3-1] ^ ham[5-1] ^ ham[7-1]);
 	c2 = (ham[2-1] ^ ham[3-1] ^ ham[6-1] ^ ham[7-1]);
 	c3 = (ham[4-1] ^ ham[5-1] ^ ham[6-1] ^ ham[7-1]);
+	c4 = (ham[1-1] ^ ham[2-1] ^ ham[3-1] ^ ham[4-1] ^ ham[5-1] ^ ham[6-1] ^ ham[7-1] ^ ham[8-1]);
 
-	// Set 4th check bit
-	int tmp = 0;
-	for(int i=0; i<7; i++) {
-		tmp = tmp^ham[i];
-	}
-	//c4 = (ham[0]^ham[1]^ham[2]^ham[3]^ham[4]^ham[5]^ham[6]); // Long implementation
-	c4 = tmp;
 
 	// Print 4th check bit status
 	std::cout << "c4 is " << std::to_string(c4) << std::endl;
@@ -115,7 +108,7 @@ int main() {
 	}
 
 	// Determine syndrome
-	int syndrome = p4; //(c1 ^ c2 ^ c3);
+	int syndrome = (c1 ^ c2 ^ c3);
 
 	// Print syndrome for user
 	std::cout << "syndrome is: " << syndrome << std::endl;
@@ -128,7 +121,12 @@ int main() {
 		std::cout << "2 bits are in error" << std::endl;
 	} else if(c4 == 1 && syndrome == 0) {
 		std::cout << "P4 is in error" << std::endl;
-	} else if(c4 == 1 && syndrome == 1) {
+		if(ham[8-1] == 0) {
+			ham[8-1] = 1;
+		} else if(ham[8-1] == 1) {
+			ham[8-1] = 0;
+		}
+	} else if(c4 == 1 && syndrome != 0) {
 		std::cout << "1 bit is in error.. correcting..." << std::endl << std::endl;
 		//std::cout << "The " << error << " bit is in error" << std::endl << std::endl;
 
@@ -136,25 +134,29 @@ int main() {
 		std::cout << "Error at: " << error << std::endl;
 		// Fix given hammign code
 		int fix = pow(check[0],2) + pow(check[1],2) + pow(check[2],2);
-		if(ham[fix] == 0) {
-			ham[fix] = 1;
-		} else if(ham[fix] == 1) {
-			ham[fix] = 0;
+		if(fix == 0) {
+			std::cout << "No errors" << std::endl;
+		} else if(ham[fix-1] == 0) {
+			ham[fix-1] = 1;
+		} else if(ham[fix-1] == 1) {
+			ham[fix-1] = 0;
 		} else {
 			std::cout << "uh oh" << std::endl;
 		}
 
-		// Convert int array into string for printing for user
-		std::string output;
-		for(int i=0; i<7; i++) {
-			output += std::to_string(ham[i]);
-		}
 
 		// Print fixed hamming code string for user
-		std::cout << "Fixed code is " << output << std::endl;
-		
-
+		//std::cout << "Fixed code is " << output << std::endl;
+	
 	}
 
+	// Convert int array into string for printing for user
+	std::string output;
+	for(int i=0; i<8; i++) {
+		output += std::to_string(ham[i]);
+	}
+	// Print fixed hamming code string for user
+	std::cout << "Fixed code is " << output << std::endl;
+	
 	return 0;
 }
