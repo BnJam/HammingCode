@@ -1,5 +1,4 @@
-/**
- * Title: HammingCode.cpp
+ /* Title: HammingCode.cpp
  * Author: Benjamin Smith
  * Date: September 15th 2017
  *
@@ -34,14 +33,17 @@ int main() {
 	std::cout << "Enter 8 bit string:" << std::endl;
 	std::cin >> input;
 	
+
+	// Assert that the size of ham is 8 bits long
+	assert(sizeof(&ham) == 8);
+
 	// Convert user input from string to int array 
 	input = input.c_str();
 	for(int i=0; i<8; i++) {
 		ham[i] = (int)input[i] - '0';
 	}
 
-	//std::cout << ham[0] << std::endl; // Debug print statement
-
+	//std::cout << sizeof(&ham) << std::endl; // Debug print statement
 	/**
 	 * Program conceptual layout
 	 * 

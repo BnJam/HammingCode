@@ -10,5 +10,6 @@ main.o: main.cpp
 	$(CC) -c main.cpp $(CFLAGS) -o main.o
 
 clean:
+	rm main
 	(rm *.o) &
 	(rm *~ */*~) &
